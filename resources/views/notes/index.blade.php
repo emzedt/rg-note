@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="p-8">
+    <div class="p-8" x-data="{ open: false }" x-on:close-modal.window="open = false">
         <header class="flex justify-between items-center mb-8">
             <div class="flex items-center space-x-4">
                 <button @click="sidebarOpen = !sidebarOpen" class="text-gray-400 hover:text-white">
@@ -13,7 +13,8 @@
                     {{ ucfirst($filter) }} Notes
                 </h1>
             </div>
-            <button type="button" onclick="Livewire.dispatch('openModal', { component: 'note-form' })"
+
+            <button type="button" @click="open = true"
                 class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 active:bg-indigo-700">
                 <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="2" stroke="currentColor">
@@ -28,8 +29,7 @@
                 @foreach ($notes as $note)
                     <div
                         class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden group hover:border-indigo-500 transition-all duration-300">
-                        <div class="p-5 cursor-pointer"
-                            onclick="Livewire.dispatch('openModal', { component: 'note-view', arguments: { noteId: {{ $note->id }} } })">
+                        <div class="p-5 cursor-pointer">
                             <h3 class="text-lg font-semibold text-gray-200 truncate">{{ $note->title }}</h3>
                             <div class="mt-2 text-sm text-gray-400 line-clamp-4">
                                 {{ strip_tags($note->content) }}
@@ -43,5 +43,27 @@
                 <p class="text-gray-500">No notes found in this section.</p>
             </div>
         @endif
+
+        <!-- Modal Overlay -->
+        <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-black bg-opacity-75 z-40" @click="open = false" style="display: none;"></div>
+
+        <!-- Modal Content -->
+        <div x-show="open" x-transition:enter="ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+            x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            class="fixed inset-0 flex items-center justify-center z-50" style="display: none;">
+            <div class="bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-white">Create Note</h2>
+                    <button class="text-gray-400 hover:text-white" @click="open = false">&times;</button>
+                </div>
+                @livewire('note-form')
+            </div>
+        </div>
     </div>
 </x-app-layout>

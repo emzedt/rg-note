@@ -2,51 +2,54 @@
 
 namespace App\Livewire;
 
+// Hapus `use LivewireUI\Modal\ModalComponent;`
+use Livewire\Component; // Ganti menjadi ini
 use App\Models\Note;
-use LivewireUI\Modal\ModalComponent;
+use Livewire\Attributes\Rule;
 
-class NoteForm extends ModalComponent
+class NoteForm extends Component // Hapus `ModalComponent`
 {
+    // ... (properti $note, $title, $content, dan method mount() tetap sama)
+    public ?Note $note;
     public $noteId;
-    public $title;
-    public $content;
+    #[Rule('required|string|max:255')]
+    public $title = '';
+    #[Rule('required|string')]
+    public $content = '';
 
-    public function mount($noteId = null)
-    {
-        if ($noteId) {
-            $note = Note::findOrFail($noteId);
-            $this->authorize('update', $note);
-            $this->noteId = $note->id;
-            $this->title = $note->title;
-            $this->content = $note->content;
-        }
-    }
+    // public function mount($noteId = null)
+    // {
+    //     if ($noteId) {
+    //         $this->note = Note::findOrFail($noteId);
+    //         $this->authorize('update', $this->note);
+    //         $this->noteId = $this->note->id;
+    //         $this->title = $this->note->title;
+    //         $this->content = $this->note->content;
+    //     }
+    // }
+
+    public bool $showModal = false;
+
 
     public function save()
     {
-        $this->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
+        $this->validate();
+        Note::create([
+            'title' => $this->title,
+            'content' => $this->content,
+            'user_id' => auth()->id(),
         ]);
+        $this->reset();
+        $this->dispatchBrowserEvent('close-modal');
+    }
 
-        if ($this->noteId) {
-            // Update
-            $note = Note::findOrFail($this->noteId);
-            $this->authorize('update', $note);
-            $note->update([
-                'title' => $this->title,
-                'content' => $this->content,
-            ]);
-        } else {
-            // Create
-            auth()->user()->notes()->create([
-                'title' => $this->title,
-                'content' => $this->content,
-            ]);
-        }
+    public function update(): void
+    {
+        $this->validate();
 
-        $this->closeModal();
-        $this->dispatch('noteSaved'); // Kirim event untuk refresh data
+        $this->note->update($this->all());
+
+        $this->reset();
     }
 
     public function render()

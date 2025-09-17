@@ -18,7 +18,6 @@
 
 <body class="font-sans antialiased">
     <div x-data="{ sidebarOpen: true }" class="h-screen flex overflow-hidden bg-gray-900 text-gray-300">
-
         @include('components.sidebar')
 
         <div class="flex-1 flex flex-col overflow-hidden">

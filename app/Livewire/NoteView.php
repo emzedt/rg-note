@@ -9,6 +9,8 @@ class NoteView extends ModalComponent
 {
     public Note $note;
 
+    public bool $showModal = false;
+
     public function mount($noteId)
     {
         $this->note = Note::findOrFail($noteId);
