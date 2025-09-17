@@ -17,7 +17,7 @@ class NoteController extends Controller
 
         switch ($filter) {
             case 'shared':
-                $notes = $user->sharedNotes()->latest()->get();
+                $notes = auth()->user()->sharedNotes()->latest()->get();
                 break;
             case 'public':
                 $notes = Note::where('is_public', true)->latest()->get();
