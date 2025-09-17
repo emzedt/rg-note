@@ -11,7 +11,7 @@ class Note extends Model
 {
     protected $fillable = ['title', 'content', 'user_id', 'is_public'];
 
-    public function owner(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -24,5 +24,15 @@ class Note extends Model
     public function sharedWithUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'note_user');
+    }
+
+    public function share(): HasMany
+    {
+        return $this->hasMany(NoteShare::class);
+    }
+
+    public function viewHistories(): HasMany
+    {
+        return $this->hasMany(NoteViewHistory::class);
     }
 }

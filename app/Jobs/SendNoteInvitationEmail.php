@@ -16,16 +16,21 @@ class SendNoteInvitationEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(
-        protected User $invitedUser,
-        protected Note $note,
-        protected User $inviter,
-        protected string $role
-    ) {}
+    protected Note $note;
+    protected User $invitedUser;
+    protected string $role;
+
+    public function __construct(Note $note, User $invitedUser)
+    {
+        $this->note = $note;
+        $this->invitedUser = $invitedUser;
+        $this->role = $note->sharedWithUsers()->where('users.id', $invitedUser->id)->first()->pivot->role ?? 'viewer';
+    }
 
     public function handle(): void
     {
-        $mailable = new NoteSharedNotification($this->note, $this->inviter, $this->role);
+        $inviter = User::find($this->note->user_id);
+        $mailable = new NoteSharedNotification($this->note, $inviter, $this->role);
         Mail::to($this->invitedUser->email)->send($mailable);
     }
 }

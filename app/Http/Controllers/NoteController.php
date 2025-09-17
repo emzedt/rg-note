@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\SendNoteInvitationEmail;
 use App\Models\Note;
+use App\Models\NoteViewHistory;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,8 @@ class NoteController extends Controller
                 $notes = Note::where('is_public', true)->latest()->get();
                 break;
             case 'private':
+                $notes = $user->notes()->where('is_public', false)->latest()->get();
+                break;
             default:
                 $notes = $user->notes()->latest()->get();
                 break;
@@ -52,6 +55,15 @@ class NoteController extends Controller
     {
         // Otorisasi: hanya pemilik atau yang di-share boleh lihat
         abort_if(!$note->is_public && $note->user_id !== auth()->id() && !$note->sharedWithUsers->contains(auth()->id()), 403);
+
+        NoteViewHistory::updateOrCreate(
+            [
+                'user_id' => auth()->id(),
+                'note_id' => $note->id,
+            ],
+            [] // Timestamp 'updated_at' akan diperbarui secara otomatis
+        );
+
         return view('notes.show', compact('note'));
     }
 

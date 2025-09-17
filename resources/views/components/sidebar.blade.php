@@ -12,8 +12,19 @@
         </div>
 
         <nav class="flex-1 px-2 py-4 space-y-2">
+            <a href="{{ route('dashboard') }}"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{-- Logika untuk highlight --}}
+                    {{ request()->routeIs('dashboard') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <hr class="border-gray-700 my-2">
             <a href="{{ route('notes.index', ['filter' => 'private']) }}"
-                class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request('filter', 'private') == 'private' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('notes.index') && request('filter', 'private') == 'private' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                 <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -22,7 +33,7 @@
                 <span>Private</span>
             </a>
             <a href="{{ route('notes.index', ['filter' => 'shared']) }}"
-                class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request('filter') == 'shared' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('notes.index') && request('filter') == 'shared' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
                     <path fill="currentColor" fill-rule="evenodd"
                         d="M16.67 13.13C18.04 14.06 19 15.32 19 17v3h4v-3c0-2.18-3.57-3.47-6.33-3.87z" />
@@ -33,7 +44,7 @@
                 <span>Shared with me</span>
             </a>
             <a href="{{ route('notes.index', ['filter' => 'public']) }}"
-                class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request('filter') == 'public' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('notes.index') && request('filter') == 'public' ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none">
                     <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                         stroke-width="2">

@@ -59,4 +59,9 @@ class User extends Authenticatable
             ->withPivot('role')
             ->withTimestamps();
     }
+
+    public function viewHistories(): HasMany
+    {
+        return $this->hasMany(NoteViewHistory::class);
+    }
 }

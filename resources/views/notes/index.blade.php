@@ -1,6 +1,6 @@
 <x-app-layout>
-    <div class="p-8" x-data="{ open: false }" x-on:close-modal.window="open = false">
-        <header class="flex justify-between items-center mb-8">
+    <div class="p-8">
+        <header class="flex justify-between items-center mb-8" x-data>
             <div class="flex items-center space-x-4">
                 <button @click="sidebarOpen = !sidebarOpen" class="text-gray-400 hover:text-white">
                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -13,8 +13,10 @@
                     {{ ucfirst($filter) }} Notes
                 </h1>
             </div>
+        </header>
 
-            <button type="button" @click="open = true"
+        <div class="p-4 mb-8 flex justify-end">
+            <button type="button" onclick="Livewire.dispatch('openModal', { component: 'note-form' })"
                 class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 active:bg-indigo-700">
                 <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="2" stroke="currentColor">
@@ -22,19 +24,39 @@
                 </svg>
                 Create Note
             </button>
-        </header>
+        </div>
 
         @if ($notes->count())
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach ($notes as $note)
                     <div
-                        class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden group hover:border-indigo-500 transition-all duration-300">
-                        <div class="p-5 cursor-pointer">
+                        class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden group hover:border-indigo-500 hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-300">
+                        <a href="{{ route('notes.show', $note) }}" class="block w-full text-left p-5 cursor-pointer">
                             <h3 class="text-lg font-semibold text-gray-200 truncate">{{ $note->title }}</h3>
-                            <div class="mt-2 text-sm text-gray-400 line-clamp-4">
+                            <div class="mt-2 text-sm text-gray-400 line-clamp-3 prose prose-sm prose-invert max-w-none">
                                 {{ strip_tags($note->content) }}
                             </div>
-                        </div>
+                            <div class="mt-4 flex justify-between items-center text-xs">
+                                <div class="flex flex-col h-full">
+                                    <div class="flex items-center text-sm text-gray-400">
+                                        <img class="h-5 w-5 rounded-full mr-2"
+                                            src="https://ui-avatars.com/api/?name={{ urlencode($note->user->name) }}&background=4f46e5&color=fff"
+                                            alt="Avatar">
+                                        <span class="mr-1">By {{ $note->user->name }}</span>
+                                        <span class="mx-1">•</span>
+                                        <span>{{ $note->updated_at->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    @if ($note->sharedWithUsers->count() > 0)
+                                        <span class="px-2 py-1 bg-blue-900 text-blue-300 rounded-full">Shared</span>
+                                    @endif
+                                    @if ($note->is_public)
+                                        <span class="px-2 py-1 bg-green-900 text-green-300 rounded-full">Public</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 @endforeach
             </div>
@@ -43,27 +65,5 @@
                 <p class="text-gray-500">No notes found in this section.</p>
             </div>
         @endif
-
-        <!-- Modal Overlay -->
-        <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
-            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-            class="fixed inset-0 bg-black bg-opacity-75 z-40" @click="open = false" style="display: none;"></div>
-
-        <!-- Modal Content -->
-        <div x-show="open" x-transition:enter="ease-out duration-300"
-            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
-            x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-            x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            class="fixed inset-0 flex items-center justify-center z-50" style="display: none;">
-            <div class="bg-gray-800 p-6 rounded-lg w-full max-w-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-white">Create Note</h2>
-                    <button class="text-gray-400 hover:text-white" @click="open = false">&times;</button>
-                </div>
-                @livewire('note-form')
-            </div>
-        </div>
     </div>
 </x-app-layout>
