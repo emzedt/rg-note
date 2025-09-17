@@ -7,7 +7,11 @@
                         <h1 class="text-2xl font-bold text-white">{{ $note->title }}</h1>
                         <div class="flex space-x-2">
                             @if (auth()->id() === $note->user_id)
-                                {{-- <a href="{{ route('notes.edit', $note->id) }}" class="px-4 py-2 bg-blue-600 rounded-md text-white text-sm">Edit</a> --}}
+                                <button type="button"
+                                    onclick="Livewire.dispatch('openModal', { component: 'note-form', arguments: { noteId: {{ $note->id }} } })"
+                                    class="px-4 py-2 bg-blue-600 rounded-md text-white text-sm hover:bg-blue-500">
+                                    Edit
+                                </button>
                                 <form action="{{ route('notes.destroy', $note->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
@@ -36,6 +40,13 @@
 
                     <div class="prose prose-invert max-w-none mt-6">
                         {!! $note->content !!}
+                    </div>
+
+                    <div class="mt-6 flex justify-end">
+                        <a href="{{ url()->previous() }}"
+                            class="px-4 py-2 bg-gray-600 text-gray-200 rounded-md hover:bg-gray-500">
+                            Back to Note
+                        </a>
                     </div>
 
                     @if (auth()->id() === $note->user_id)

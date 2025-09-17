@@ -10,7 +10,7 @@ class NoteViewHistory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'note_id'];
+    protected $fillable = ['user_id', 'note_id', 'updated_at'];
 
     public function note(): BelongsTo
     {

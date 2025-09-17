@@ -11,11 +11,27 @@ export default {
 
     theme: {
         extend: {
+            backgroundSize: {
+                '300%': '300% 300%',
+            },
+            animation: {
+                'gradient-move': 'gradient-move 6s ease-in-out infinite',
+            },
+            keyframes: {
+                'gradient-move': {
+                '0%, 100%': {
+                    backgroundPosition: '0% 50%',
+                },
+                '50%': {
+                    backgroundPosition: '100% 50%',
+                },
+                },
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
         },
     },
 
-    plugins: [forms],
+    plugins: [forms, require('@tailwindcss/typography')],
 };

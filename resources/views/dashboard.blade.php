@@ -1,8 +1,28 @@
 <x-app-layout>
     <div class="p-8 text-white">
-        <header class="mb-10">
+        {{-- <header class="mb-10">
             <h1 class="text-3xl font-bold">{{ $greeting }}</h1>
+        </header> --}}
+
+        <header class="flex justify-between items-center mb-8" x-data>
+            <div class="flex items-center space-x-4">
+                <button @click="sidebarOpen = !sidebarOpen" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </div>
         </header>
+
+        <div class="py-24 flex items-center justify-center">
+            <h1
+                class="text-4xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent bg-300% animate-gradient-move">
+                {{ $greeting }}
+            </h1>
+        </div>
+
 
         <div class="mb-12">
 

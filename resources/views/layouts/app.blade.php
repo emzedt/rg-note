@@ -31,6 +31,19 @@
     @livewireScripts
     @livewire('wire-elements-modal')
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('actionCompleted', (event) => {
+                // Tampilkan pesan sukses jika ada
+                // if (event.message) {
+                //     alert(event.message);
+                // }
+
+                // Reload halaman untuk melihat perubahan
+                window.location.reload();
+            });
+        });
+    </script>
 </body>
 
 </html>

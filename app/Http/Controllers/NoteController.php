@@ -61,26 +61,12 @@ class NoteController extends Controller
                 'user_id' => auth()->id(),
                 'note_id' => $note->id,
             ],
-            [] // Timestamp 'updated_at' akan diperbarui secara otomatis
+            [
+                'updated_at' => now(), // <-- KUNCI PERBAIKANNYA DI SINI
+            ]
         );
 
         return view('notes.show', compact('note'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Note $note)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Note $note)
-    {
-        //
     }
 
     /**

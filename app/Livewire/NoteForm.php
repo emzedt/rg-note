@@ -69,7 +69,7 @@ class NoteForm extends ModalComponent
 
         $this->reset(['title', 'content', 'attachment', 'isPublic']);
         $this->dispatch('closeModal');
-        $this->dispatch('refreshNotes');
+        $this->dispatch('actionCompleted');
     }
 
     public function delete()
