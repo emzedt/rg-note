@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Jobs\SendNoteCommentNotification;
 use App\Models\Comment;
 use App\Models\Note;
 use Livewire\Component;
@@ -19,14 +20,19 @@ class NoteComments extends Component
     public function addComment()
     {
         $this->validate([
-            'commentText' => 'required|string|min:2'
+            'commentText' => 'required|string|min:2|max:255'
         ]);
 
-        Comment::create([
+        $comment = Comment::create([
             'note_id' => $this->note->id,
             'user_id' => auth()->id(),
             'body' => $this->commentText
         ]);
+
+        // Trigger job email notifikasi ke author note
+        if ($this->note->user && $this->note->user->email) {
+            SendNoteCommentNotification::dispatch($this->note, $comment, auth()->user());
+        }
 
         $this->reset('commentText');
         $this->note->refresh();

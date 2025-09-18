@@ -7,17 +7,26 @@
                         <h1 class="text-2xl font-bold text-white">{{ $note->title }}</h1>
                         <div class="flex space-x-2">
                             @if (auth()->id() === $note->user_id)
+                                {{-- Ini adalah tombol EDIT yang hanya bisa diakses oleh pemilik --}}
                                 <button type="button"
                                     onclick="Livewire.dispatch('openModal', { component: 'note-form', arguments: { noteId: {{ $note->id }} } })"
                                     class="px-4 py-2 bg-blue-600 rounded-md text-white text-sm hover:bg-blue-500">
                                     Edit
                                 </button>
+                                {{-- Ini adalah tombol DELETE yang hanya bisa diakses oleh pemilik --}}
                                 <form action="{{ route('notes.destroy', $note->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="px-4 py-2 bg-red-600 rounded-md text-white"
                                         onclick="return confirm('Are you sure?')">Delete</button>
                                 </form>
+                            @elseif($note->isEditor(auth()->user()))
+                                {{-- Tampilkan tombol EDIT untuk editor --}}
+                                <button type="button"
+                                    onclick="Livewire.dispatch('openModal', { component: 'note-form', arguments: { noteId: {{ $note->id }} } })"
+                                    class="px-4 py-2 bg-blue-600 rounded-md text-white text-sm hover:bg-blue-500">
+                                    Edit
+                                </button>
                             @endif
                         </div>
                     </div>

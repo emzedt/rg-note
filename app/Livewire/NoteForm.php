@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Jobs\SendNotePublicNotification;
 use App\Models\Attachment;
 use App\Models\Note;
+use App\Models\User;
 use Livewire\Attributes\Rule;
 use LivewireUI\Modal\ModalComponent;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -18,16 +20,16 @@ class NoteForm extends ModalComponent
     public $noteId;
     public $isPublic = false;
 
-    #[Rule('required|string|max:255')]
+    #[Rule('required|string|max:50')]
     public $title = '';
 
-    #[Rule('required|string')]
+    #[Rule('required|string|max:255')]
     public $content = '';
 
     // Untuk menampung file-file BARU yang di-upload sementara
     #[Rule([
         'newAttachments' => 'nullable|array',
-        'newAttachments.*' => 'file|mimes:png,jpg,jpeg,pdf,doc,docx,ppt,pptx,zip|max:10240',
+        'newAttachments.*' => 'file|mimes:png,jpg,jpeg,pdf,doc,docx,ppt,pptx,zip|max:5120',
     ])]
     public $newAttachments = [];
 
@@ -57,21 +59,32 @@ class NoteForm extends ModalComponent
     {
         $this->validate();
 
+        $wasPublic = $this->noteId ? $this->note->is_public : false;
+
         $data = [
             'title' => $this->title,
             'content' => $this->content,
-            'user_id' => auth()->id(),
             'is_public' => $this->isPublic,
         ];
 
         // Simpan atau update note terlebih dahulu
         if ($this->noteId) {
+            // Jika note sudah ada (update), hanya perbarui data yang diizinkan
             $this->note->update($data);
             session()->flash('status', 'Note updated successfully!');
         } else {
+            // Jika note baru (create), tambahkan user_id
+            $data['user_id'] = auth()->id();
             $this->note = Note::create($data);
             $this->noteId = $this->note->id; // Ambil ID dari note yang baru dibuat
             session()->flash('status', 'Note created successfully!');
+        }
+
+        // Trigger email jika note baru public atau status berubah ke public
+        if ((!$wasPublic && $this->isPublic) && $this->note) {
+            foreach (User::where('id', '!=', $this->note->user_id)->get() as $user) {
+                SendNotePublicNotification::dispatch($this->note, $this->note->user, $user);
+            }
         }
 
         // Proses file-file baru yang diunggah sementara

@@ -26,7 +26,7 @@ class ShareNote extends Component
 
     public function loadSharedUsers()
     {
-        $this->sharedUsers = $this->note->sharedWithUsers()->get();
+        $this->sharedUsers = $this->note->sharedWithUsers()->withPivot('role')->get();
     }
 
     public function shareWithUser()

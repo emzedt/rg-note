@@ -18,8 +18,7 @@ class AttachmentController extends Controller
             'upload' => [
                 'required',
                 'file',
-                'max:10240', // Maksimal 10MB
-                // 'mimes:png,jpg,jpeg,pdf,ppt,pptx,doc,docx,zip' // Cara validasi lain
+                'max:5120',
             ],
         ]);
 

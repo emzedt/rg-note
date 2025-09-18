@@ -24,10 +24,9 @@
 
         <div class="py-3 flex items-center justify-center">
             <h1 class="text-4xl font-bold text-white">
-                Ruang Gadai Note
+                Raja Gadai Note
             </h1>
         </div>
-        {{-- <p>Ruang Gadai Note</p> --}}
 
         <div class="w-full sm:max-w-md px-6 py-4 bg-gray-900 shadow-md overflow-hidden sm:rounded-lg">
             {{ $slot }}

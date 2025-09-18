@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collaboration Invitation</title>
+    <title>New Comment on Your Note</title>
 </head>
 
 <body style="font-family: Arial, sans-serif; background-color: #121212; color: #ffffff; margin: 0; padding: 0;">
@@ -12,19 +12,20 @@
         <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
                 <td style="text-align: center;">
-                    <h1 style="color: #ffffff; margin: 0 0 20px 0;">Hello!</h1>
+                    <h1 style="color: #ffffff; margin: 0 0 20px 0;">New Comment on Your Note</h1>
                 </td>
             </tr>
             <tr>
                 <td style="background-color: #2c2c2c; padding: 20px; border-radius: 8px;">
                     <p style="color: #ffffff; margin: 0 0 16px 0; line-height: 1.6;">
-                        You have been invited by <strong>{{ $inviter->name }}</strong> to collaborate on the note
-                        titled
-                        <strong style="color: #4a90e2;">"{{ $note->title }}"</strong>.
+                        Your note <strong style="color: #4a90e2;">"{{ $note->title }}"</strong> just received a new
+                        comment from {{ $commenter->name }}: {{ $comment->body }}
                     </p>
-                    <p style="color: #ffffff; margin: 0 0 16px 0; line-height: 1.6;">
-                        You have been given <strong>{{ $role }}</strong> access.
-                    </p>
+
+                    <div
+                        style="border-left: 4px solid #4a90e2; margin: 20px 0; padding-left: 15px; color: #bbbbbb; font-style: italic;">
+                        <p style="margin: 0;">{{ $comment->content }}</p>
+                    </div>
 
                     <div style="text-align: center; margin: 20px 0;">
                         <a href="{{ route('notes.show', $note) }}"

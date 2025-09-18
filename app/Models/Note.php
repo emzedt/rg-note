@@ -24,7 +24,13 @@ class Note extends Model
 
     public function sharedWithUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'note_user');
+        return $this->belongsToMany(User::class, 'note_user')->withPivot('role') // <-- Bagian ini krusial
+            ->withTimestamps();;
+    }
+
+    public function isEditor(User $user)
+    {
+        return $this->sharedWithUsers()->where('user_id', $user->id)->where('role', 'editor')->exists();
     }
 
     public function share(): HasMany

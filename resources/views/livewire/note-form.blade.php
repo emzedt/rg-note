@@ -56,6 +56,9 @@
                 class="relative block w-full border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-indigo-500 transition-colors">
                 <input id="file-upload" type="file" wire:model="newAttachments" multiple class="sr-only">
                 <span class="text-gray-400">Drag & drop files here, or click to select files</span>
+                <span class="text-gray-400">MAX 5 MB per files</span>
+                <br>
+                <span class="text-gray-400">(.png, .jpg, .jpeg, .pdf, .doc, .docx, <br> .ppt, .pptx, .zip)</span>
             </label>
             @error('newAttachments.*')
                 <span class="text-red-500 text-xs mt-1">{{ $message }}</span>

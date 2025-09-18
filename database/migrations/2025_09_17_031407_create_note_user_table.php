@@ -15,7 +15,7 @@ return new class extends Migration
             $table->primary(['note_id', 'user_id']); // Composite primary key
             $table->foreignId('note_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('role')->default('viewer')->after('user_id');
+            $table->enum('role', ['viewer', 'editor'])->default('viewer')->after('user_id');
             $table->timestamps();
         });
     }
