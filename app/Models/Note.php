@@ -33,11 +33,6 @@ class Note extends Model
         return $this->sharedWithUsers()->where('user_id', $user->id)->where('role', 'editor')->exists();
     }
 
-    public function share(): HasMany
-    {
-        return $this->hasMany(NoteShare::class);
-    }
-
     public function viewHistories(): HasMany
     {
         return $this->hasMany(NoteViewHistory::class);
