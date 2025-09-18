@@ -10,6 +10,7 @@ Aplikasi ini mencakup fitur-fitur penting yang diminta dalam tugas, serta bebera
 
   * **Login & Register**: Pengguna dapat membuat akun dan masuk ke aplikasi untuk mengakses catatan pribadi mereka.
   * **Dashboard**: Halaman utama yang menampilkan ringkasan catatan pengguna.
+  * **Recent visited**: Menampilkan notes yang terakhir dikunjungi. Jika note baru dibuat tidak akan tertampil disini, harus dilihat dulu detailnya baru tercatat di **Recent visited**
   * **Catatan Pribadi (Private)**: Pengguna dapat membuat catatan pribadi yang hanya bisa dilihat oleh mereka sendiri.
   * **Berbagi Catatan (Shared)**:
       * **Shared with me**: Halaman yang menampilkan catatan yang dibagikan oleh pengguna lain.
