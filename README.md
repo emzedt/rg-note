@@ -1,6 +1,6 @@
 # Raja Gadai Note
 
-Raja Gadai Note adalah aplikasi web pencatat pribadi yang dikembangkan untuk memenuhi **Tugas A: Web Developer Laravel**. Aplikasi ini memungkinkan pengguna untuk membuat, mengelola, dan berbagi catatan secara efisien, dengan fitur keamanan dan kolaborasi yang terintegrasi.
+Raja Gadai Note adalah aplikasi web pencatat pribadi yang dikembangkan untuk memenuhi **Tugas A: Web Developer Laravel**. Aplikasi ini memungkinkan pengguna untuk membuat, mengelola, dan berbagi catatan secara efisien, dengan fitur kolaborasi yang terintegrasi.
 
 -----
 
