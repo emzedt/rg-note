@@ -23,27 +23,57 @@ Aplikasi ini mencakup fitur-fitur penting yang diminta dalam tugas, serta bebera
 
 -----
 
+
 ## Instalasi
 
 ### Dari Kode Sumber
 
 1.  **Kloning repositori:**
+
     ```bash
     git clone https://github.com/emzedt/rg-note.git
     ```
-2.  **Masuk ke direktori:**
+
+2.  **Masuk ke direktori proyek:**
+
     ```bash
     cd rg-note
     ```
+
 3.  **Instal dependensi:**
+
     ```bash
+    composer install
     npm install
     ```
-4.  **Jalankan aplikasi:**
+
+      * `composer install` akan menginstal semua dependensi PHP yang dibutuhkan oleh Laravel.
+      * `npm install` akan menginstal semua dependensi JavaScript (front-end).
+
+4.  **Siapkan file `.env` dan jalankan migrasi database:**
+
     ```bash
-    npm start
+    cp .env.example .env
+    php artisan key:generate
+    php artisan migrate:fresh --seed
     ```
-5.  **Jalankan queue:**
+
+      * Perintah `cp .env.example .env` akan menyalin file contoh `.env` ke file `.env` yang akan digunakan.
+      * `php artisan key:generate` akan membuat kunci aplikasi yang unik.
+      * `php artisan migrate:fresh --seed` akan menjalankan semua migrasi untuk membuat tabel database dan mengisi data awal (seeder).
+
+5.  **Jalankan aplikasi:**
+
+    ```bash
+    npm run dev
+    ```
+
+      * Perintah ini akan menjalankan server lokal Laravel. Ini untuk pengguna Laragon.
+
+6.  **Jalankan Queue Worker (opsional):**
+
     ```bash
     php artisan queue:work
     ```
+
+      * Perintah ini diperlukan untuk memproses notifikasi email dan tugas latar belakang lainnya. Jalankan perintah ini di terminal terpisah.
