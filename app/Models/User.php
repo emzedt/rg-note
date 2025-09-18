@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(NoteViewHistory::class);
     }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(Attachment::class);
+    }
 }

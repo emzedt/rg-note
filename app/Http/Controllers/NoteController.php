@@ -6,10 +6,13 @@ use App\Jobs\SendNoteInvitationEmail;
 use App\Models\Note;
 use App\Models\NoteViewHistory;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request)
     {
         $filter = $request->query('filter', 'private'); // Default ke 'private'

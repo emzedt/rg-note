@@ -47,19 +47,21 @@
                 Recently visited
             </h2>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                @foreach ($recentNotes as $note)
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                @foreach ($histories as $history)
+                    @php $note = $history->note; @endphp
                     <a href="{{ route('notes.show', $note) }}"
                         class="block bg-gray-800 hover:bg-gray-700 rounded-lg p-4 h-32 transition-colors duration-200">
                         <div class="flex flex-col h-full">
                             <p class="flex-grow font-semibold truncate">{{ $note->title }}</p>
-                            <div class="flex items-center text-sm text-gray-400">
-                                <img class="h-5 w-5 rounded-full mr-2"
-                                    src="https://ui-avatars.com/api/?name={{ urlencode($note->user->name) }}&background=4f46e5&color=fff"
-                                    alt="Avatar">
-                                <span class="mr-1">By {{ $note->user->name }}</span>
-                                <span class="mx-1">•</span>
-                                <span>{{ $note->updated_at->diffForHumans() }}</span>
+                            <div class="text-sm text-gray-400">
+                                <div class="flex items-center">
+                                    <img class="h-5 w-5 rounded-full mr-2"
+                                        src="https://ui-avatars.com/api/?name={{ urlencode($note->user->name) }}&background=4f46e5&color=fff"
+                                        alt="Avatar">
+                                    <span>By {{ $note->user->name }}</span>
+                                </div>
+                                <span class="block mt-1">Last visit {{ $history->updated_at->diffForHumans() }}</span>
                             </div>
                         </div>
                     </a>

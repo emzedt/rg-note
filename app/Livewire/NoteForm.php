@@ -2,16 +2,17 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
+use App\Models\Attachment;
 use App\Models\Note;
 use Livewire\Attributes\Rule;
-use Livewire\WithFileUploads;
 use LivewireUI\Modal\ModalComponent;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
+use Livewire\WithFileUploads; // <-- TAMBAHKAN INI
 
 class NoteForm extends ModalComponent
 {
-    use WithFileUploads, AuthorizesRequests;
+    use AuthorizesRequests, WithFileUploads; // <-- TAMBAHKAN INI
 
     public ?Note $note = null;
     public $noteId;
@@ -23,10 +24,15 @@ class NoteForm extends ModalComponent
     #[Rule('required|string')]
     public $content = '';
 
-    #[Rule('nullable|file|max:5120')]
-    public $attachment;
+    // Untuk menampung file-file BARU yang di-upload sementara
+    #[Rule([
+        'newAttachments' => 'nullable|array',
+        'newAttachments.*' => 'file|mimes:png,jpg,jpeg,pdf,doc,docx,ppt,pptx,zip|max:10240',
+    ])]
+    public $newAttachments = [];
 
-    public bool $showModal = false;
+    // Ganti nama variabel agar lebih jelas
+    public $existingAttachments;
 
     public function mount($noteId = null)
     {
@@ -38,6 +44,13 @@ class NoteForm extends ModalComponent
             $this->content = $this->note->content;
             $this->isPublic = $this->note->is_public;
         }
+        $this->loadAttachments();
+    }
+
+    public function loadAttachments()
+    {
+        // Hanya muat attachment yang terikat pada note ini
+        $this->existingAttachments = $this->note ? $this->note->attachments()->latest()->get() : collect();
     }
 
     public function save()
@@ -47,40 +60,54 @@ class NoteForm extends ModalComponent
         $data = [
             'title' => $this->title,
             'content' => $this->content,
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->id(),
             'is_public' => $this->isPublic,
         ];
 
-        if ($this->attachment) {
-            $data['attachment_path'] = $this->attachment->store('attachments', 'public');
-        }
-
+        // Simpan atau update note terlebih dahulu
         if ($this->noteId) {
-            // Update existing note
-            $note = Note::findOrFail($this->noteId);
-            $this->authorize('update', $note);
-            $note->update($data);
-            session()->flash('message', 'Note updated successfully!');
+            $this->note->update($data);
+            session()->flash('status', 'Note updated successfully!');
         } else {
-            // Create new note
-            Note::create($data);
-            session()->flash('message', 'Note created successfully!');
+            $this->note = Note::create($data);
+            $this->noteId = $this->note->id; // Ambil ID dari note yang baru dibuat
+            session()->flash('status', 'Note created successfully!');
         }
 
-        $this->reset(['title', 'content', 'attachment', 'isPublic']);
+        // Proses file-file baru yang diunggah sementara
+        if (!empty($this->newAttachments)) {
+            foreach ($this->newAttachments as $file) {
+                $path = $file->store('attachments', 'public');
+                Attachment::create([
+                    'user_id'           => auth()->id(),
+                    'note_id'           => $this->noteId, // Ikat ke note
+                    'original_filename' => $file->getClientOriginalName(),
+                    'path'              => $path,
+                    'mime_type'         => $file->getMimeType(),
+                    'size'              => $file->getSize(),
+                ]);
+            }
+        }
+
         $this->dispatch('closeModal');
         $this->dispatch('actionCompleted');
     }
 
-    public function delete()
+    // Menghapus attachment yang sudah ada di database
+    public function deleteAttachment($attachmentId)
     {
-        if ($this->noteId) {
-            $note = Note::findOrFail($this->noteId);
-            $this->authorize('delete', $note);
-            $note->delete();
-            session()->flash('message', 'Note deleted successfully!');
-            return redirect()->route('notes.index');
-        }
+        $attachment = Attachment::findOrFail($attachmentId);
+        $this->authorize('delete', $attachment);
+        Storage::disk('public')->delete($attachment->path);
+        $attachment->delete();
+        $this->loadAttachments(); // Muat ulang daftar
+        session()->flash('status', 'Attachment deleted successfully!');
+    }
+
+    // Menghapus file dari daftar upload sementara (preview)
+    public function removeNewAttachment($index)
+    {
+        array_splice($this->newAttachments, $index, 1);
     }
 
     public function render()

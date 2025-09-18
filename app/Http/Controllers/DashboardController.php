@@ -26,10 +26,10 @@ class DashboardController extends Controller
         $histories = NoteViewHistory::where('user_id', auth()->id())
             ->with('note.user')      // Ambil data note & pemiliknya sekaligus
             ->latest('updated_at')  // Urutkan dari yang terbaru dilihat
-            ->get();
+            ->get()
+            ->unique('note_id')     // Ambil hanya 1 history terakhir per note
+            ->values();
 
-        $recentNotes = $histories->unique('note_id')->pluck('note');
-
-        return view('dashboard', compact('greeting', 'recentNotes'));
+        return view('dashboard', compact('greeting', 'histories'));
     }
 }
