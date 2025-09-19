@@ -4,7 +4,7 @@ Raja Gadai Note adalah aplikasi web pencatat pribadi yang dikembangkan untuk mem
 
 -----
 
-**Notion : ** https://www.notion.so/Raja-Gadai-Note-271d65a8535080aeb0eac8e1711938fc
+**Notion : ** https://www.notion.so/Raja-Gadai-Note-271d65a8535080aeb0eac8e1711938fc  
 Notion berisikan flow process dan struktur database dari Raja Gadai Note.
 
 -----
